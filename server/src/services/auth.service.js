@@ -22,26 +22,26 @@ const registerUser = async ({ name, idNumber, email, password }) => {
     throw error;
   }
 
-  const duplicateChecks = [
-    { idNumber: normalizedIdNumber },
-  ];
-
-  if (normalizedEmail) {
-    duplicateChecks.push({ email: normalizedEmail });
-  }
-
-  const existingUser = await User.findOne({ $or: duplicateChecks });
-
-  if (existingUser) {
-    const isSameUserRetry = await bcrypt.compare(password, existingUser.password);
+  const existingUserById = await User.findOne({ idNumber: normalizedIdNumber });
+  if (existingUserById) {
+    const isSameUserRetry = await bcrypt.compare(password, existingUserById.password);
 
     if (isSameUserRetry) {
-      return buildUserResponse(existingUser);
+      return buildUserResponse(existingUserById);
     }
 
-    const error = new Error("User already exists");
+    const error = new Error("A user with this ID number already exists.");
     error.statusCode = 400;
     throw error;
+  }
+
+  if (normalizedEmail) {
+    const existingUserByEmail = await User.findOne({ email: normalizedEmail });
+    if (existingUserByEmail) {
+      const error = new Error("A user with this email already exists.");
+      error.statusCode = 400;
+      throw error;
+    }
   }
 
   const user = await User.create({
