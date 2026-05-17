@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../services/auth.service.js";
+import { getMyProfile } from "../services/profile.service.js";
+import { getMyPreferences } from "../services/preference.service.js";
 
 // Hardcoded admin credentials
 const ADMIN_CREDENTIALS = {
@@ -38,20 +40,56 @@ export default function LoginPage() {
       const res = await loginUser(payload);
       console.log("Login response:", res);
       if (res?.token) {
-        localStorage.setItem("token", res.token);
+        const token = res.token;
+        localStorage.setItem("token", token);
         localStorage.setItem("user", JSON.stringify(res.user));
-        
+
         // Check if login credentials match admin credentials
         const isAdmin = data.idNumber?.trim() === ADMIN_CREDENTIALS.idNumber &&
                         data.password === ADMIN_CREDENTIALS.password;
-        
+
         if (isAdmin) {
           localStorage.setItem("role", "admin");
           console.log("Admin logged in, redirecting to /admin");
           navigate("/admin");
-        } else {
+          return;
+        }
+
+        // Onboarding flow: profile -> preferences -> personal area
+        let hasProfile = false;
+        let hasPreferences = false;
+
+        try {
+          const profileResult = await getMyProfile(token);
+          hasProfile = Boolean(profileResult?.profile);
+        } catch (profileError) {
+          if (profileError?.response?.status !== 404) {
+            console.error("Profile fetch error:", profileError);
+          }
+        }
+
+        if (!hasProfile) {
           localStorage.setItem("role", "user");
-          console.log("User logged in, redirecting to /personal-area");
+          console.log("No profile found. Redirecting to /profile");
+          navigate("/profile");
+          return;
+        }
+
+        try {
+          const preferencesResult = await getMyPreferences(token);
+          hasPreferences = Boolean(preferencesResult?.preferences);
+        } catch (preferencesError) {
+          if (preferencesError?.response?.status !== 404) {
+            console.error("Preferences fetch error:", preferencesError);
+          }
+        }
+
+        localStorage.setItem("role", "user");
+        if (!hasPreferences) {
+          console.log("Profile exists but no preferences found. Redirecting to /preferences");
+          navigate("/preferences");
+        } else {
+          console.log("Profile and preferences found. Redirecting to /personal-area");
           navigate("/personal-area");
         }
       } else {

@@ -8,3 +8,12 @@ export const createPreferences = async (data, token) => {
   });
   return response.data;
 };
+
+export const getMyPreferences = async (token) => {
+  const response = await api.get("/api/preference/me", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+};
