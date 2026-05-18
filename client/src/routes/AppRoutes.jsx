@@ -9,7 +9,9 @@ import MatchesPage from "../pages/MatchesPage";
 import InterestsPage from "../pages/InterestsPage";
 import AdminPage from "../pages/AdminPage";
 import ProtectedRoute from "../components/ProtectedRoute";
-
+import AdminRoute from "../components/AdminRoute.jsx";
+import AdminUsersPage from "../pages/AdminUsersPage";
+import AdminPendingMatchesPage from "../pages/AdminPendingMatchesPage";
 export default function AppRoutes() {
   return (
     <Routes>
@@ -17,7 +19,7 @@ export default function AppRoutes() {
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/login" element={<LoginPage />} />
 
-      {/* Protected Routes - require authentication */}
+      {/* User Routes */}
       <Route
         path="/"
         element={
@@ -66,14 +68,33 @@ export default function AppRoutes() {
           </ProtectedRoute>
         }
       />
+
+      {/* Admin Routes */}
       <Route
         path="/admin"
         element={
-          <ProtectedRoute>
+          <AdminRoute>
             <AdminPage />
-          </ProtectedRoute>
+          </AdminRoute>
+        }
+      />
+      <Route
+        path="/admin/users"
+        element={
+          <AdminRoute>
+            <AdminUsersPage />
+          </AdminRoute>
+        }
+      />
+      <Route
+        path="/admin/pending-matches"
+        element={
+          <AdminRoute>
+            <AdminPendingMatchesPage />
+          </AdminRoute>
         }
       />
     </Routes>
+    
   );
 }

@@ -1,7 +1,7 @@
 import api from "../api/axios.js";
 
 export const createProfile = async (data, token) => {
-  const config = {
+  const response = await api.post("/api/profile", data, {
     headers: {
       Authorization: `Bearer ${token}`,
     },

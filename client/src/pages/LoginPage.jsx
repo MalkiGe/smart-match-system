@@ -65,6 +65,7 @@ export default function LoginPage() {
 
         localStorage.setItem("token", token);
         localStorage.setItem("user", JSON.stringify(res.user));
+        localStorage.setItem("role", data.user.role);                    
 
         const isAdmin = res.user?.role === "admin";
 
