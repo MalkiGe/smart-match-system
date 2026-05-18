@@ -1,12 +1,16 @@
 ﻿import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import {
   Box,
   Button,
   Container,
+  FormControl,
+  FormHelperText,
   IconButton,
   InputAdornment,
+  InputLabel,
+  OutlinedInput,
   TextField,
   Typography,
 } from "@mui/material";
@@ -21,6 +25,7 @@ export default function RegisterPage() {
 
   const {
     register,
+    control,
     handleSubmit,
     formState: { errors },
   } = useForm({
@@ -91,7 +96,7 @@ export default function RegisterPage() {
           error={Boolean(errors.idNumber)}
           helperText={errors.idNumber ? errors.idNumber.message : ""}
           fullWidth
-          inputProps={{ maxLength: 9, inputMode: "numeric" }}
+          type="tel"
         />
 
         <TextField
@@ -109,44 +114,35 @@ export default function RegisterPage() {
           fullWidth
         />
 
-        <TextField
-          label="סיסמה"
-          placeholder="הכנס סיסמה"
-          type={showPassword ? "text" : "password"}
-          {...register("password", {
+        <Controller
+          name="password"
+          control={control}
+          rules={{
             required: "סיסמה היא שדה חובה",
-            minLength: {
-              value: 8,
-              message: "הסיסמה חייבת להכיל לפחות 8 תווים",
-            },
-            maxLength: {
-              value: 16,
-              message: "הסיסמה חייבת להכיל עד 16 תווים",
-            },
-            pattern: {
-              value: /[A-Za-z]/,
-              message: "הסיסמה חייבת לכלול אות אנגלית אחת לפחות",
-            },
-          })}
-          error={Boolean(errors.password)}
-          helperText={errors.password ? errors.password.message : ""}
-          fullWidth
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton onClick={handleTogglePassword} edge="end" aria-label="Toggle password visibility">
-                  {showPassword ? <VisibilityOff /> : <Visibility />}
-                </IconButton>
-              </InputAdornment>
-            ),
+            minLength: { value: 8, message: "הסיסמה חייבת להכיל לפחות 8 תווים" },
+            maxLength: { value: 16, message: "הסיסמה חייבת להכיל עד 16 תווים" },
+            pattern: { value: /[A-Za-z]/, message: "הסיסמה חייבת לכלול אות אנגלית אחת לפחות" },
           }}
+          render={({ field }) => (
+            <FormControl fullWidth error={Boolean(errors.password)}>
+              <InputLabel htmlFor="register-password">סיסמה</InputLabel>
+              <OutlinedInput
+                {...field}
+                id="register-password"
+                type={showPassword ? "text" : "password"}
+                label="סיסמה"
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton onClick={handleTogglePassword} edge="end" aria-label="Toggle password visibility">
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                }
+              />
+                  {errors.password && <FormHelperText>{errors.password.message}</FormHelperText>}
+            </FormControl>
+          )}
         />
-
-        {apiError && (
-          <Typography color="error.main" sx={{ mt: 1 }}>
-            {apiError}
-          </Typography>
-        )}
 
         <Button type="submit" variant="contained" disabled={isSubmitting} size="large">
           {isSubmitting ? "שולח..." : "הרשמה"}

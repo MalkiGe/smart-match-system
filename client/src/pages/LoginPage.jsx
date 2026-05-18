@@ -5,8 +5,12 @@ import {
   Box,
   Button,
   Container,
+  FormControl,
+  FormHelperText,
   IconButton,
   InputAdornment,
+  InputLabel,
+  OutlinedInput,
   Paper,
   TextField,
   Typography,
@@ -160,9 +164,9 @@ export default function LoginPage() {
                 label="תעודת זהות"
                 placeholder="הכנס תעודת זהות"
                 fullWidth
+                type="tel"
                 error={Boolean(errors.idNumber)}
                 helperText={errors.idNumber ? errors.idNumber.message : ""}
-                inputProps={{ maxLength: 9, inputMode: "numeric" }}
               />
             )}
           />
@@ -172,24 +176,23 @@ export default function LoginPage() {
             control={control}
             rules={{ required: "סיסמה היא שדה חובה" }}
             render={({ field }) => (
-              <TextField
-                {...field}
-                label="סיסמה"
-                placeholder="הכנס סיסמה"
-                fullWidth
-                type={showPassword ? "text" : "password"}
-                error={Boolean(errors.password)}
-                helperText={errors.password ? errors.password.message : ""}
-                InputProps={{
-                  endAdornment: (
+              <FormControl fullWidth error={Boolean(errors.password)}>
+                <InputLabel htmlFor="login-password">סיסמה</InputLabel>
+                <OutlinedInput
+                  {...field}
+                  id="login-password"
+                  type={showPassword ? "text" : "password"}
+                  label="סיסמה"
+                  endAdornment={
                     <InputAdornment position="end">
                       <IconButton onClick={handleTogglePassword} edge="end" aria-label="Toggle password visibility">
                         {showPassword ? <VisibilityOff /> : <Visibility />}
                       </IconButton>
                     </InputAdornment>
-                  ),
-                }}
-              />
+                  }
+                />
+                {errors.password && <FormHelperText>{errors.password.message}</FormHelperText>}
+              </FormControl>
             )}
           />
 
