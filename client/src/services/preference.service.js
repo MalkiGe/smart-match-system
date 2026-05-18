@@ -17,3 +17,12 @@ export const getMyPreferences = async (token) => {
   });
   return response.data;
 };
+
+export const updatePreferences = async (data, token) => {
+  const response = await api.put("/preference", data, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+};

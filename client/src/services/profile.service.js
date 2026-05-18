@@ -17,3 +17,12 @@ export const getMyProfile = async (token) => {
   });
   return response.data;
 };
+
+export const updateProfile = async (data, token) => {
+  const response = await api.put("/profile", data, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+};
