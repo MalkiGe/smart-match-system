@@ -79,13 +79,13 @@ const InterestCard = ({ interest, type, onChanged }) => {
         border: "1px solid rgba(63, 113, 213, 0.12)",
       }}
     >
-      <CardContent>
-        <Stack spacing={1.5}>
-          <Typography variant="h6">
+      <CardContent sx={{ px: 3, py: 2 }}>
+        <Stack spacing={1.5} alignItems="center" sx={{ width: '100%', textAlign: 'center', wordBreak: 'break-word' }}>
+          <Typography variant="h6" sx={{ wordBreak: 'break-word' }}>
             {otherUser?.name || "משתמש"}
           </Typography>
 
-          <Typography>
+          <Typography sx={{ wordBreak: 'break-word' }}>
             מזהה: {otherUser?.idNumber || "לא צוין"}
           </Typography>
 
@@ -127,7 +127,7 @@ const InterestCard = ({ interest, type, onChanged }) => {
           )}
 
           {message && (
-            <Alert severity={message.includes("בהצלחה") ? "success" : "error"}>
+            <Alert severity={message.includes("בהצלחה") ? "success" : "error"} sx={{ width: '100%' }}>
               {message}
             </Alert>
           )}

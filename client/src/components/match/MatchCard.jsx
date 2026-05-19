@@ -52,28 +52,29 @@ const MatchCard = ({ match, onInterestSent }) => {
         border: "1px solid rgba(63, 113, 213, 0.12)",
       }}
     >
-      <CardContent>
-        <Stack spacing={1}>
-          <Typography variant="h6">
+      <CardContent sx={{ px: 3, py: 2 }}>
+        <Stack spacing={1} alignItems="center" sx={{ width: '100%', textAlign: 'center' }}>
+          <Typography variant="h6" sx={{ wordBreak: 'break-word' }}>
             {match?.name || "משתמש"}
           </Typography>
 
-          <Typography>עיר: {match?.city || "לא צוין"}</Typography>
-          <Typography>גיל: {match?.age || "לא צוין"}</Typography>
-          <Typography>גובה: {match?.height || "לא צוין"}</Typography>
-          <Typography>סגנון: {match?.style || "לא צוין"}</Typography>
-          <Typography>תיאור: {match?.description || "לא צוין"}</Typography>
+          <Typography sx={{ wordBreak: 'break-word' }}>עיר: {match?.city || "לא צוין"}</Typography>
+          <Typography sx={{ wordBreak: 'break-word' }}>גיל: {match?.age || "לא צוין"}</Typography>
+          <Typography sx={{ wordBreak: 'break-word' }}>גובה: {match?.height || "לא צוין"}</Typography>
+          <Typography sx={{ wordBreak: 'break-word' }}>סגנון: {match?.style || "לא צוין"}</Typography>
+          <Typography sx={{ wordBreak: 'break-word' }}>תיאור: {match?.description || "לא צוין"}</Typography>
 
           <Button
             variant="contained"
             onClick={handleSendInterest}
             disabled={loading || !receiverId}
+            sx={{ mt: 1 }}
           >
             {loading ? "שולח..." : "שליחת התעניינות"}
           </Button>
 
           {message && (
-            <Alert severity={message.includes("בהצלחה") ? "success" : "error"}>
+            <Alert severity={message.includes("בהצלחה") ? "success" : "error"} sx={{ width: '100%' }}>
               {message}
             </Alert>
           )}

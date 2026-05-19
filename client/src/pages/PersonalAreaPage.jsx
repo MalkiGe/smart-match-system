@@ -486,8 +486,8 @@ export default function PersonalAreaPage() {
         </Typography>
 
         {profileExists ? (
-          <Stack spacing={1} alignItems="center">
-            <Typography>שם: {displayName}</Typography>
+          <Stack spacing={1} alignItems="center" sx={{ width: '100%', textAlign: 'center', wordBreak: 'break-word' }}>
+            <Typography sx={{ wordBreak: 'break-word' }}>שם: {displayName}</Typography>
             <Typography>גיל: {profileData?.age || "לא צוין"}</Typography>
             <Typography>גובה: {profileData?.height || "לא צוין"}</Typography>
             <Typography>סגנון: {profileData?.style || "לא צוין"}</Typography>
