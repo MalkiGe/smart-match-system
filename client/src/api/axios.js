@@ -1,7 +1,19 @@
 ﻿import axios from "axios";
 
+// Build a robust baseURL:
+// - If VITE_API_URL is provided, ensure it ends with '/api' so requests map to server routes.
+// - If not provided, default to '/api' so Vite dev proxy forwards '/api' to backend.
+let base = import.meta.env.VITE_API_URL ?? "";
+if (base) {
+  // strip trailing slash
+  base = base.replace(/\/$/, "");
+  if (!base.endsWith("/api")) base = base + "/api";
+} else {
+  base = "/api";
+}
+
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || "http://127.0.0.1:3000",
+  baseURL: base,
 });
 
 api.interceptors.request.use(

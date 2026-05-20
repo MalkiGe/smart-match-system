@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
   Alert,
   Box,
@@ -13,13 +14,18 @@ import {
   Typography,
 } from "@mui/material";
 import {
-  getAdminUserProfile,
-  getPendingMatches,
-  removePendingMatch,
-} from "../services/admin.service.js";
+  fetchAdminUserProfile,
+  fetchPendingMatches,
+  removePendingMatch as removePendingMatchAction,
+  selectAdminPendingMatches,
+  selectAdminPendingMatchesLoading,
+  selectAdminProfileLoading,
+  selectAdminPendingMatchesError,
+  selectAdminUserProfile,
+} from "../store/slices/adminSlice.js";
 
 const getServerBaseUrl = () => {
-  const base = import.meta.env.VITE_API_URL || "http://127.0.0.1:3000";
+  const base = import.meta.env.VITE_API_URL || "http://localhost:3000";
   return base.replace(/\/api\/?$/, "");
 };
 
@@ -41,43 +47,25 @@ const normalizeFileUrl = (path) => {
 };
 
 const AdminPendingMatchesPage = () => {
-  const [matches, setMatches] = useState([]);
-  const [selectedProfile, setSelectedProfile] = useState(null);
   const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [profileLoading, setProfileLoading] = useState(false);
   const [message, setMessage] = useState("");
-
-  const loadMatches = useCallback(async () => {
-    try {
-      setLoading(true);
-      setMessage("");
-
-      const data = await getPendingMatches();
-      setMatches(data?.matches || data?.data || []);
-    } catch (err) {
-      setMessage(err.message || "לא הצלחנו לטעון הצעות");
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  const dispatch = useDispatch();
+  const matches = useSelector(selectAdminPendingMatches);
+  const selectedProfile = useSelector(selectAdminUserProfile);
+  const loading = useSelector(selectAdminPendingMatchesLoading);
+  const profileLoading = useSelector(selectAdminProfileLoading);
+  const error = useSelector(selectAdminPendingMatchesError);
 
   useEffect(() => {
-    loadMatches();
-  }, [loadMatches]);
+    dispatch(fetchPendingMatches());
+  }, [dispatch]);
 
   const handleOpenProfile = async (userId) => {
     try {
-      setProfileLoading(true);
-      setMessage("");
-
-      const data = await getAdminUserProfile(userId);
-      setSelectedProfile(data);
+      await dispatch(fetchAdminUserProfile(userId)).unwrap();
       setOpen(true);
     } catch (err) {
       setMessage(err.message || "לא הצלחנו לטעון פרופיל");
-    } finally {
-      setProfileLoading(false);
     }
   };
 
@@ -86,10 +74,8 @@ const AdminPendingMatchesPage = () => {
       const senderId = match?.sender?._id || match?.sender?.id;
       const receiverId = match?.receiver?._id || match?.receiver?.id;
 
-      await removePendingMatch({ senderId, receiverId });
-
+      await dispatch(removePendingMatchAction({ senderId, receiverId })).unwrap();
       setMessage("ההצעה הוסרה מהרשימה");
-      await loadMatches();
     } catch (err) {
       setMessage(err.message || "לא הצלחנו להסיר את ההצעה");
     }

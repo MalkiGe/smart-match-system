@@ -1,22 +1,22 @@
 import api from "../api/axios.js";
 
 export const sendInterest = async (receiverId) => {
-  const response = await api.post("/api/interest", { receiverId });
+  const response = await api.post("/interest", { receiverId });
   return response.data;
 };
 
 export const getIncomingInterests = async () => {
-  const response = await api.get("/api/interest/incoming");
+  const response = await api.get("/interest/incoming");
   return response.data;
 };
 
 export const getOutgoingInterests = async () => {
-  const response = await api.get("/api/interest/outgoing");
+  const response = await api.get("/interest/outgoing");
   return response.data;
 };
 
 export const acceptInterest = async (senderId) => {
-  const response = await api.put("/api/interest/respond", {
+  const response = await api.put("/interest/respond", {
     senderId,
     status: "accepted",
   });
@@ -25,7 +25,7 @@ export const acceptInterest = async (senderId) => {
 };
 
 export const rejectInterest = async (senderId) => {
-  const response = await api.put("/api/interest/respond", {
+  const response = await api.put("/interest/respond", {
     senderId,
     status: "rejected",
   });
@@ -35,8 +35,8 @@ export const rejectInterest = async (senderId) => {
 
 export const sendToManager = async (otherUserId) => {
   const payload = { otherUserId };
-  console.log("interest.service: sendToManager ->", api.defaults.baseURL + "/api/interest/send-to-manager", payload);
-  const response = await api.post("/api/interest/send-to-manager", payload);
+  console.log("interest.service: sendToManager ->", api.defaults.baseURL + "/interest/send-to-manager", payload);
+  const response = await api.post("/interest/send-to-manager", payload);
   console.log("interest.service: sendToManager response status", response.status);
 
   return response.data;

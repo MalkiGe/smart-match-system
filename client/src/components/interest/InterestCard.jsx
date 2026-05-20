@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useDispatch } from "react-redux";
 import {
   Alert,
   Button,
@@ -13,7 +14,7 @@ import {
   acceptInterest,
   rejectInterest,
   sendToManager,
-} from "../../services/interest.service.js";
+} from "../../store/slices/interestsSlice.js";
 
 const getStatusLabel = (status) => {
   if (status === "pending") return "ממתין";
@@ -22,7 +23,8 @@ const getStatusLabel = (status) => {
   return "לא ידוע";
 };
 
-const InterestCard = ({ interest, type, onChanged }) => {
+const InterestCard = ({ interest, type }) => {
+  const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [snackOpen, setSnackOpen] = useState(false);
@@ -31,40 +33,56 @@ const InterestCard = ({ interest, type, onChanged }) => {
   const otherUser = type === "incoming" ? interest?.sender : interest?.receiver;
   const otherUserId = otherUser?._id || otherUser?.id;
 
-  const handleAction = async (action, value) => {
+  const handleAccept = async () => {
     try {
       setLoading(true);
       setMessage("");
 
-      // Prevent duplicate send-to-manager requests when already approved
-      if (action === sendToManager) {
-        const alreadySent = !!(
-          interest?.senderApprovedToManager || interest?.receiverApprovedToManager
-        );
-
-        if (alreadySent) {
-          setAlreadySentOpen(true);
-          return;
-        }
-      }
-
-      console.log("InterestCard: calling action", action?.name || "action", value);
-      const result = await action(value);
-      console.log("InterestCard: action result", result);
-
+      await dispatch(acceptInterest(otherUserId)).unwrap();
       setMessage("הפעולה בוצעה בהצלחה");
-
-      // Show a small success snackbar specifically when sending to manager
-      if (action === sendToManager) {
-        setSnackOpen(true);
-      }
-
-      if (onChanged) {
-        await onChanged();
-      }
     } catch (err) {
       console.error("Interest action failed:", err);
-      setMessage(err.message || "לא הצלחנו לבצע את הפעולה");
+      setMessage(err?.message || "לא הצלחנו לבצע את הפעולה");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleReject = async () => {
+    try {
+      setLoading(true);
+      setMessage("");
+
+      await dispatch(rejectInterest(otherUserId)).unwrap();
+      setMessage("הפעולה בוצעה בהצלחה");
+    } catch (err) {
+      console.error("Interest action failed:", err);
+      setMessage(err?.message || "לא הצלחנו לבצע את הפעולה");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSendToManager = async () => {
+    try {
+      setLoading(true);
+      setMessage("");
+
+      const alreadySent = !!(
+        interest?.senderApprovedToManager || interest?.receiverApprovedToManager
+      );
+
+      if (alreadySent) {
+        setAlreadySentOpen(true);
+        return;
+      }
+
+      await dispatch(sendToManager(otherUserId)).unwrap();
+      setMessage("הפעולה בוצעה בהצלחה");
+      setSnackOpen(true);
+    } catch (err) {
+      console.error("Interest action failed:", err);
+      setMessage(err?.message || "לא הצלחנו לבצע את הפעולה");
     } finally {
       setLoading(false);
     }
@@ -100,7 +118,7 @@ const InterestCard = ({ interest, type, onChanged }) => {
               <Button
                 variant="contained"
                 disabled={loading || !otherUserId}
-                onClick={() => handleAction(acceptInterest, otherUserId)}
+                onClick={handleAccept}
               >
                 אישור
               </Button>
@@ -109,7 +127,7 @@ const InterestCard = ({ interest, type, onChanged }) => {
                 variant="outlined"
                 color="error"
                 disabled={loading || !otherUserId}
-                onClick={() => handleAction(rejectInterest, otherUserId)}
+                onClick={handleReject}
               >
                 דחייה
               </Button>
@@ -120,7 +138,7 @@ const InterestCard = ({ interest, type, onChanged }) => {
             <Button
               variant="contained"
               disabled={loading || !otherUserId}
-              onClick={() => handleAction(sendToManager, otherUserId)}
+              onClick={handleSendToManager}
             >
               העבר לטיפול מנהל
             </Button>

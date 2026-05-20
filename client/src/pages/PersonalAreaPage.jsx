@@ -29,7 +29,7 @@ import {
 } from "../services/preference.service.js";
 
 const getServerBaseUrl = () => {
-  const base = import.meta.env.VITE_API_URL || "http://127.0.0.1:3000";
+  const base = import.meta.env.VITE_API_URL || "http://localhost:3000";
   return base.replace(/\/api\/?$/, "");
 };
 

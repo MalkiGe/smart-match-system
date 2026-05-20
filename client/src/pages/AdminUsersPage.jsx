@@ -1,7 +1,7 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
   Alert,
-  Avatar,
   Box,
   Button,
   CircularProgress,
@@ -15,12 +15,18 @@ import {
   Typography,
 } from "@mui/material";
 import {
-  getAdminUsers,
-  getAdminUserProfile,
-} from "../services/admin.service.js";
+  fetchAdminUsers,
+  fetchAdminUserProfile,
+  selectAdminUsers,
+  selectAdminUsersLoading,
+  selectAdminProfileLoading,
+  selectAdminUsersError,
+  selectAdminProfileError,
+  selectAdminUserProfile,
+} from "../store/slices/adminSlice.js";
 
 const getServerBaseUrl = () => {
-  const base = import.meta.env.VITE_API_URL || "http://127.0.0.1:3000";
+  const base = import.meta.env.VITE_API_URL || "http://localhost:3000";
   return base.replace(/\/api\/?$/, "");
 };
 
@@ -42,43 +48,25 @@ const normalizeFileUrl = (path) => {
 };
 
 const AdminUsersPage = () => {
-  const [users, setUsers] = useState([]);
-  const [selectedProfile, setSelectedProfile] = useState(null);
   const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [profileLoading, setProfileLoading] = useState(false);
-  const [error, setError] = useState("");
-
-  const loadUsers = useCallback(async () => {
-    try {
-      setLoading(true);
-      setError("");
-
-      const data = await getAdminUsers();
-      setUsers(data?.users || data?.data || []);
-    } catch (err) {
-      setError(err.message || "לא הצלחנו לטעון משתמשים");
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  const dispatch = useDispatch();
+  const users = useSelector(selectAdminUsers);
+  const selectedProfile = useSelector(selectAdminUserProfile);
+  const loading = useSelector(selectAdminUsersLoading);
+  const profileLoading = useSelector(selectAdminProfileLoading);
+  const usersError = useSelector(selectAdminUsersError);
+  const profileError = useSelector(selectAdminProfileError);
 
   useEffect(() => {
-    loadUsers();
-  }, [loadUsers]);
+    dispatch(fetchAdminUsers());
+  }, [dispatch]);
 
   const handleOpenProfile = async (userId) => {
     try {
-      setProfileLoading(true);
-      setError("");
-
-      const data = await getAdminUserProfile(userId);
-      setSelectedProfile(data);
+      await dispatch(fetchAdminUserProfile(userId)).unwrap();
       setOpen(true);
-    } catch (err) {
-      setError(err.message || "לא הצלחנו לטעון פרופיל");
-    } finally {
-      setProfileLoading(false);
+    } catch {
+      setOpen(false);
     }
   };
 
@@ -108,9 +96,9 @@ const AdminUsersPage = () => {
         כל המשתמשים
       </Typography>
 
-      {error && (
+      {(usersError || profileError) && (
         <Alert severity="error" sx={{ mb: 3, borderRadius: 2 }}>
-          {error}
+          {usersError || profileError}
         </Alert>
       )}
 

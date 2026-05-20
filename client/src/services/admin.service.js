@@ -1,22 +1,22 @@
 import api from "../api/axios.js";
 
 export const getAdminUsers = async () => {
-  const response = await api.get("/api/admin/users");
+  const response = await api.get("/admin/users");
   return response.data;
 };
 
 export const getAdminUserProfile = async (userId) => {
-  const response = await api.get(`/api/admin/users/${userId}/profile`);
+  const response = await api.get(`/admin/users/${userId}/profile`);
   return response.data;
 };
 
 export const getPendingMatches = async () => {
-  const response = await api.get("/api/admin/pending-matches");
+  const response = await api.get("/admin/pending-matches");
   return response.data;
 };
 
 export const removePendingMatch = async ({ senderId, receiverId }) => {
-  const response = await api.delete("/api/admin/pending-match", {
+  const response = await api.delete("/admin/pending-match", {
     data: { senderId, receiverId },
   });
 

@@ -1,59 +1,24 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Alert, Box, CircularProgress, Typography } from "@mui/material";
-import { getMatches } from "../services/match.service.js";
 import MatchCard from "../components/match/MatchCard.jsx";
+import {
+  fetchMatches,
+  selectMatches,
+  selectMatchesLoading,
+  selectMatchesError,
+} from "../store/slices/matchesSlice.js";
 
-const normalizeCandidates = (data) => {
-  if (Array.isArray(data)) return data;
-  return data?.candidates || data?.matches || data?.data || [];
-};
 
 const MatchesPage = () => {
-  const [matches, setMatches] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-
-  const loadMatches = useCallback(async () => {
-    try {
-      setLoading(true);
-      setError("");
-
-      const data = await getMatches();
-      const normalized = normalizeCandidates(data);
-      console.log("MatchesPage: loaded matches", normalized);
-      setMatches(normalized);
-    } catch (err) {
-      console.error("Failed to load matches:", err);
-      setError(err.message || "לא הצלחנו לטעון התאמות");
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  const dispatch = useDispatch();
+  const matches = useSelector(selectMatches);
+  const loading = useSelector(selectMatchesLoading);
+  const error = useSelector(selectMatchesError);
 
   useEffect(() => {
-    loadMatches();
-  }, [loadMatches]);
-
-  const normalizeId = (item) => {
-    if (!item && item !== 0) return item;
-    // if item is an object like { _id: '...' } or a user object
-    if (typeof item === "object") return item._id || item.id || item.user?._id || item.user || undefined;
-    return item;
-  };
-
-  const handleInterestSent = (receiverId) => {
-    const rid = normalizeId(receiverId);
-    console.log("MatchesPage: handleInterestSent called with", receiverId, "normalized->", rid);
-    setMatches((prev) => {
-      console.log("MatchesPage: before filter, matches", prev?.length);
-      const filtered = prev.filter((match) => {
-        const id = normalizeId(match?._id || match?.id || match?.user?._id || match?.user);
-        return id !== rid;
-      });
-      console.log("MatchesPage: after filter, matches", filtered?.length);
-      return filtered;
-    });
-  };
+    dispatch(fetchMatches());
+  }, [dispatch]);
 
   if (loading) {
     return (
@@ -79,11 +44,7 @@ const MatchesPage = () => {
         <Typography>לא נמצאו התאמות כרגע</Typography>
       ) : (
         matches.map((match) => (
-          <MatchCard
-            key={match._id || match.id}
-            match={match}
-            onInterestSent={handleInterestSent}
-          />
+          <MatchCard key={match._id || match.id} match={match} />
         ))
       )}
     </Box>

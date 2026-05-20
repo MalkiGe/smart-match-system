@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useDispatch } from "react-redux";
 import {
   Alert,
   Button,
@@ -7,9 +8,10 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { sendInterest } from "../../services/interest.service.js";
+import { sendInterest } from "../../store/slices/matchesSlice.js";
 
-const MatchCard = ({ match, onInterestSent }) => {
+const MatchCard = ({ match }) => {
+  const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
@@ -28,16 +30,12 @@ const MatchCard = ({ match, onInterestSent }) => {
       setLoading(true);
       setMessage("");
 
-      await sendInterest(receiverId);
+      await dispatch(sendInterest(receiverId)).unwrap();
 
       setMessage("ההתעניינות נשלחה בהצלחה");
-
-      if (onInterestSent) {
-        onInterestSent(receiverId);
-      }
     } catch (err) {
       console.error("Failed to send interest:", err);
-      setMessage(err.message || "לא הצלחנו לשלוח התעניינות");
+      setMessage(err?.message || "לא הצלחנו לשלוח התעניינות");
     } finally {
       setLoading(false);
     }

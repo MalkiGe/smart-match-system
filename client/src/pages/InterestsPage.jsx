@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
   Alert,
   Box,
@@ -7,47 +8,26 @@ import {
   Tabs,
   Typography,
 } from "@mui/material";
-import {
-  getIncomingInterests,
-  getOutgoingInterests,
-} from "../services/interest.service.js";
 import InterestCard from "../components/interest/InterestCard.jsx";
-
-const normalizeArray = (data) => {
-  if (Array.isArray(data)) return data;
-  return data?.interests || data?.data || [];
-};
+import {
+  fetchInterests,
+  selectIncomingInterests,
+  selectOutgoingInterests,
+  selectInterestsLoading,
+  selectInterestsError,
+} from "../store/slices/interestsSlice.js";
 
 const InterestsPage = () => {
   const [tab, setTab] = useState(0);
-  const [incoming, setIncoming] = useState([]);
-  const [outgoing, setOutgoing] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-
-  const loadInterests = useCallback(async () => {
-    try {
-      setLoading(true);
-      setError("");
-
-      const [incomingData, outgoingData] = await Promise.all([
-        getIncomingInterests(),
-        getOutgoingInterests(),
-      ]);
-
-      setIncoming(normalizeArray(incomingData));
-      setOutgoing(normalizeArray(outgoingData));
-    } catch (err) {
-      console.error("Failed to load interests:", err);
-      setError(err.message || "לא הצלחנו לטעון התעניינויות");
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  const dispatch = useDispatch();
+  const incoming = useSelector(selectIncomingInterests);
+  const outgoing = useSelector(selectOutgoingInterests);
+  const loading = useSelector(selectInterestsLoading);
+  const error = useSelector(selectInterestsError);
 
   useEffect(() => {
-    loadInterests();
-  }, [loadInterests]);
+    dispatch(fetchInterests());
+  }, [dispatch]);
 
   if (loading) {
     return (
@@ -84,7 +64,6 @@ const InterestsPage = () => {
                 key={interest._id || interest.id}
                 interest={interest}
                 type="incoming"
-                onChanged={loadInterests}
               />
             ))
           ))}
@@ -98,7 +77,6 @@ const InterestsPage = () => {
                 key={interest._id || interest.id}
                 interest={interest}
                 type="outgoing"
-                onChanged={loadInterests}
               />
             ))
           ))}
