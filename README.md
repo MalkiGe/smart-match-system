@@ -1,4 +1,4 @@
-# SmartMatch – Full Stack Matching Platform 💙
+# SmartMatch – Full Stack Matching Platform 
 
 Full Stack matching platform built with React, Node.js, Express and MongoDB.
 
