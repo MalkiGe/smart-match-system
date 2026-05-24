@@ -380,21 +380,20 @@ SmartMatch/
 
 # 👩‍💻 My Responsibilities
 
-This project was developed as part of a Full Stack development portfolio.
+This project was developed collaboratively as part of a Full Stack development project.
 
-Main responsibilities included:
+My primary responsibilities included:
 
-* Frontend architecture
-* React component development
-* Backend API development
-* MongoDB schema design
-* Authentication implementation
-* Matching workflow logic
-* Admin system development
-* File upload system
-* UI/UX improvements
-* Debugging and system integration
+- Designing and implementing the matching system
+- Building the interests workflow and approval logic
+- Developing major frontend features and UI flows
+- API integration between client and server
+- Backend business logic for matches and interests
+- Admin workflow implementation
+- System synchronization and debugging
+- Improving architecture, modularity, and user experience
 
+I was heavily involved in the core system flow, integration between frontend and backend, and overall project stabilization.
 ---
 
 # 🖼 Screenshots
