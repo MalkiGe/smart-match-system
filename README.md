@@ -1,119 +1,64 @@
-# SmartMatch 💙
+# SmartMatch – Full Stack Matching Platform 💙
 
-### Full Stack Matching Platform
-
-![React](https://img.shields.io/badge/Frontend-React-blue?logo=react)
-![Node.js](https://img.shields.io/badge/Backend-Node.js-green?logo=node.js)
-![MongoDB](https://img.shields.io/badge/Database-MongoDB-darkgreen?logo=mongodb)
-![Express](https://img.shields.io/badge/API-Express-black?logo=express)
-![JWT](https://img.shields.io/badge/Auth-JWT-orange)
-![MUI](https://img.shields.io/badge/UI-Material_UI-007FFF?logo=mui)
+Full Stack matching platform built with React, Node.js, Express and MongoDB.
 
 ---
 
-# 📌 Project Overview
+## Overview
 
-**SmartMatch** is a Full Stack web application designed to manage intelligent matching workflows between users through profiles, preferences, interests, approvals, and administrator handling.
+SmartMatch is a Full Stack web application that allows users to create profiles, define preferences, receive compatible matches, send interests, approve requests and transfer approved matches to administrator handling.
 
-The system allows users to:
+The project was developed collaboratively as part of a Full Stack development project, with a strong focus on matching workflows, frontend-backend integration, modular architecture and real-world system behavior.
 
-* Register and authenticate securely
-* Build personal profiles
-* Define matching preferences
-* Receive dynamic match suggestions
-* Send and manage interests
-* Approve or reject match requests
-* Share profile files after mutual approval
-* Escalate approved matches to an administrator
-
-The platform was built with a strong focus on:
-
-* Modular architecture
-* Secure authentication
-* Scalable backend structure
-* Clean UI/UX
-* Real-world workflow simulation
+The platform simulates a complete matching workflow including authentication, profile management, approval flows, file sharing and admin management.
 
 ---
 
-# 🚀 Main Features
+## Features
 
-## User Authentication
-
-* JWT-based authentication
-* Protected routes
-* Persistent login sessions
-* Role-based authorization
-
-## Profile Management
-
-* Create and update personal profile
-* Upload profile image
-* Upload PDF resume
-* Store education, occupation, financial data, and additional profile information
-
-## Preference System
-
-* Define desired match criteria
-* Multi-select appearance preferences
-* Financial requirement filtering
-* Dynamic compatibility filtering
-
-## Matching Engine
-
-* Server-side match generation
-* Preference-based filtering
-* Hidden sensitive data before approval
-* Dynamic compatibility checks
-
-## Interest Workflow
-
-* Send interest requests
-* Accept or reject interests
-* Mutual approval flow
-* Conditional profile exposure
-
-## Admin Dashboard
-
-* View pending approved matches
-* Review user profiles
-* Manage match workflow
+- User registration & login
+- JWT authentication
+- Protected routes
+- Personal profile management
+- Preference-based matching
+- Dynamic match filtering
+- Interests & approval workflow
+- Resume PDF upload
+- Profile image upload
+- Conditional profile exposure
+- Admin dashboard & management
+- REST API architecture
 
 ---
 
-# 🛠 Tech Stack
+## Tech Stack
 
-## Frontend
+### Frontend
+- React
+- Vite
+- Material UI (MUI)
+- React Router
+- Axios
 
-* React
-* Vite
-* React Router
-* Material UI (MUI)
-* Axios
+### Backend
+- Node.js
+- Express.js
 
-## Backend
+### Database
+- MongoDB
+- Mongoose
 
-* Node.js
-* Express.js
+### Authentication
+- JWT (JSON Web Token)
 
-## Database
-
-* MongoDB
-* Mongoose
-
-## Authentication
-
-* JWT (JSON Web Token)
-
-## File Upload
-
-* Multer
+### File Upload
+- Multer
 
 ---
 
-# 🧱 System Architecture
+## System Architecture
 
-The project follows a modular Full Stack architecture:
+The application follows a modular Full Stack architecture:
 
 ```text
 Client (React)
@@ -125,173 +70,60 @@ Business Logic Layer (Services)
 MongoDB Database
 ```
 
-## Backend Layers
+### Backend Structure
+- Routes
+- Controllers
+- Services
+- Models
+- Middleware
 
-### Routes
-
-Responsible for defining API endpoints.
-
-### Controllers
-
-Handle incoming requests and responses.
-
-### Services
-
-Contain business logic and database operations.
-
-### Models
-
-Mongoose schemas and database structure.
-
-### Middleware
-
-Authentication and authorization validation.
+### Frontend Structure
+- Pages
+- Components
+- API Services
+- Protected Routes
+- Reusable UI Components
 
 ---
 
-# 🔐 Authentication & Authorization
+## Authentication & Authorization
 
-The system uses JWT authentication.
+The system uses JWT-based authentication with protected routes and role-based authorization.
 
-## Authentication Flow
-
+### Authentication Flow
 1. User logs in
 2. Server validates credentials
 3. JWT token is generated
-4. Token is stored in localStorage
-5. Protected routes validate token access
-
-## Authorization
+4. Token is stored locally
+5. Protected routes validate access permissions
 
 The application supports:
-
-* Regular users
-* Admin users
-
-Admin-only routes are protected via middleware.
+- Regular users
+- Admin users
 
 ---
 
-# 🤖 AI Integration
+## Matching Workflow
 
-Currently, the system does not include AI integrations.
+The platform includes a complete matching flow:
 
-However, the architecture was designed to support future AI-based recommendation systems such as:
-
-* Compatibility scoring
-* Smart ranking
-* Recommendation optimization
-
----
-
-# 🗄 Database Structure
-
-## Main Collections
-
-### Users
-
-Stores:
-
-* Credentials
-* Roles
-* Authentication data
-
-### Profiles
-
-Stores:
-
-* Personal information
-* Study place
-* Occupation
-* Financial capabilities
-* Resume and image paths
-
-### Preferences
-
-Stores:
-
-* Matching requirements
-* Appearance preferences
-* Financial requirements
-
-### Interests
-
-Stores:
-
-* Match requests
-* Approval states
-* Admin transfer states
+1. Users create profiles and preferences
+2. The server generates compatible matches
+3. Users send interests
+4. Interests can be approved or rejected
+5. After mutual approval, additional profile data becomes available
+6. Approved matches can be transferred to administrator handling
 
 ---
 
-# 📡 API Overview
-
-## Authentication
-
-```http
-POST /api/auth/register
-POST /api/auth/login
-```
-
-## Profile
-
-```http
-GET /api/profile/me
-POST /api/profile
-PUT /api/profile
-```
-
-## Preferences
-
-```http
-GET /api/preference/me
-POST /api/preference
-PUT /api/preference
-```
-
-## Matches
-
-```http
-GET /api/match/candidates
-```
-
-## Interests
-
-```http
-POST /api/interest
-GET /api/interest/incoming
-GET /api/interest/outgoing
-PUT /api/interest/:id/approve
-PUT /api/interest/:id/reject
-```
-
-## Admin
-
-```http
-GET /api/admin/users
-GET /api/admin/pending-matches
-```
-
----
-
-# ⚙️ Installation & Setup
-
-## Clone Repository
-
-```bash
-git clone https://github.com/yourusername/smartmatch.git
-cd smartmatch
-```
-
----
-
-## Install Dependencies
+## Installation
 
 ### Client
 
 ```bash
 cd client
 npm install
+npm run dev
 ```
 
 ### Server
@@ -299,143 +131,91 @@ npm install
 ```bash
 cd server
 npm install
-```
-
----
-
-## Run Development Servers
-
-### Backend
-
-```bash
-cd server
 node server.js
 ```
 
-### Frontend
-
-```bash
-cd client
-npm run dev
-```
-
 ---
 
-# 🔑 Environment Variables
+## Environment Variables
 
-## Client `.env`
+### Client `.env`
 
 ```env
 VITE_API_URL=http://localhost:3000
 ```
 
-## Server `.env`
+### Server `.env`
 
 ```env
 PORT=3000
 MONGO_URI=your_mongodb_connection
-JWT_SECRET=your_secret_key
+JWT_SECRET=your_secret
 ```
 
 ---
 
-# 📂 Project Structure
+## Project Structure
 
 ```text
 SmartMatch/
 │
 ├── client/
 │   ├── src/
-│   │   ├── api/
 │   │   ├── components/
 │   │   ├── pages/
 │   │   ├── services/
-│   │   ├── routes/
-│   │   └── context/
+│   │   ├── api/
+│   │   └── routes/
 │
 ├── server/
 │   ├── src/
 │   │   ├── controllers/
-│   │   ├── middleware/
+│   │   ├── services/
 │   │   ├── models/
 │   │   ├── routes/
-│   │   ├── services/
-│   │   └── utils/
+│   │   └── middleware/
 ```
 
 ---
 
-# 📈 Future Improvements
-
-* AI-powered compatibility scoring
-* Real-time notifications
-* Advanced filtering system
-* Email verification
-* Mobile responsive optimization
-* Cloud file storage
-* Admin analytics dashboard
-* Chat system between approved users
-
----
-
-# 👩‍💻 My Responsibilities
+## My Responsibilities
 
 This project was developed collaboratively as part of a Full Stack development project.
 
 My primary responsibilities included:
 
-- Designing and implementing the matching system
-- Building the interests workflow and approval logic
-- Developing major frontend features and UI flows
+- Matching system implementation
+- Interests workflow & approval logic
+- Frontend development and UI flows
 - API integration between client and server
-- Backend business logic for matches and interests
+- Backend business logic
 - Admin workflow implementation
 - System synchronization and debugging
-- Improving architecture, modularity, and user experience
+- UI/UX improvements
+- Feature integration and stabilization
 
-I was heavily involved in the core system flow, integration between frontend and backend, and overall project stabilization.
----
-
-# 🖼 Screenshots
-
-## Login Page
-
-*Add screenshot here*
-
-## Personal Area
-
-*Add screenshot here*
-
-## Matches Page
-
-*Add screenshot here*
-
-## Interests Page
-
-*Add screenshot here*
-
-## Admin Dashboard
-
-*Add screenshot here*
+I was heavily involved in the core application flow, frontend-backend integration and overall system behavior.
 
 ---
 
-# 🌐 Deployment
+## Screenshots
 
-Deployment-ready architecture.
-
-Can be deployed using:
-
-* Render
-* Railway
-* Vercel
-* Netlify
-* MongoDB Atlas
+_Add screenshots here_
 
 ---
 
-# 📬 Contact
+## Deployment
 
-**Developer:** Hani Gdalovich
-**Role:** Full Stack Developer
-**Tech Stack:** React | Node.js | MongoDB | Express | JWT | MUI
+The application architecture is deployment-ready and can be deployed using platforms such as:
+- Render
+- Railway
+- Vercel
+- MongoDB Atlas
+
+---
+
+## Developer
+
+**Hani Gdalovich**  
+Full Stack Developer  
+React | Node.js | Express | MongoDB
